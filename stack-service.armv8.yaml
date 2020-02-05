@@ -1,0 +1,6 @@
+version: '2.3'
+
+services:
+  tor-node:
+    image: amgxv/tor
+

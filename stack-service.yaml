@@ -1,0 +1,45 @@
+version: '2.3'
+
+services:
+  tor-node:
+    image: osminogin/tor-simple
+    restart: always
+    ports:
+      - '9050:9050'
+
+  selenium-hub:
+    image: selenium/hub
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+
+
+  firefox:
+    image: selenium/node-firefox-debug
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - GRID_DEBUG=true
+    ports:
+      - "5900:5900"
+
+  getinfo:
+    build:
+      context: ./Social
+    image: getinfo
+    depends_on:
+      - tor-node
+      - selenium-hub
+      - firefox
+    restart: unless-stopped
+    volumes:
+      - ./Social:/Social
+    environment:
+      webdriverRemote: 'http://selenium-hub:4444/wd/hub'
+      DEBUG: "${DEBUG:-false}"
+      TELEGRAM_BOT_ID: "${TELEGRAM_BOT_ID:-false}"
+      TELEGRAM_USER_ID: "${TELEGRAM_USER_ID:-false}"
