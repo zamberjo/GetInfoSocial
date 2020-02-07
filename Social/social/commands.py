@@ -226,7 +226,7 @@ def conv_do_action(update, context):
         update.message.reply_text('Error!', reply_markup=ReplyKeyboardRemove())
         return
 
-    next_step = SHOW_OBJ_SELECT
+    next_step = SHOW_OBJ_ACTION
     elements = []
     if EMOTICONS["email"] in action:
         _logger.debug("-> email")
@@ -256,7 +256,9 @@ def conv_do_action(update, context):
 
     elif EMOTICONS["see"] in action:
         _logger.debug("-> see")
-        update.message.reply_text("\n".join(elements) or "->None<-")
+        update.message.reply_text(
+            "\n".join(elements) or "->None<-",
+            reply_markup=ReplyKeyboardRemove())
 
     elif EMOTICONS["rm"] in action:
         _logger.debug("-> rm")
@@ -313,7 +315,8 @@ def conv_do_action(update, context):
         update.message.reply_text(
             "DEFAULT", reply_markup=ReplyKeyboardRemove())
 
-    if next_step == SHOW_OBJ_SELECT:
+    _logger.debug("next_step: {}".format(next_step))
+    if next_step == SHOW_OBJ_ACTION:
         show_actions(update)
     return next_step
 

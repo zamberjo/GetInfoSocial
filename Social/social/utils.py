@@ -10,7 +10,7 @@ def save_file(file_path, values):
 
 
 def check_user(user):
-    return bool(user.id == os.environ["TELEGRAM_USER_ID"])
+    return bool(str(user.id) == os.environ["TELEGRAM_USER_ID"])
 
 
 def check_valid_email(email):
